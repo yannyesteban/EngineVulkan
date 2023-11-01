@@ -191,6 +191,11 @@ private:
     std::vector<VkFence> inFlightFences;
     uint32_t currentFrame = 0;
 
+
+    VertexBuffer buffer;
+    VertexBuffer iBuffer;
+    VertexBuffer buffer2;
+
     bool framebufferResized = false;
 
     void initWindow() {
@@ -230,10 +235,42 @@ private:
         //createTextureImage();
         //createTextureImageView();
         textureImageView = vDevice->textureImageView;
+        textureSampler = vDevice->createTextureSampler();
+        buffer = vDevice->createVertexBuffer();
 
-        createTextureSampler();
-        createVertexBuffer();
-        createIndexBuffer();
+        const std::vector<Vertex> vertices = {
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+        };
+        
+        //VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+        //createTextureSampler();
+        //createVertexBuffer();
+        buffer = vDevice->createDataBuffer((void *)vertices.data(), sizeof(vertices[0]) * vertices.size());
+
+
+        const std::vector<Vertex> vertices2 = {
+    {{-0.99f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+        };
+
+        //VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+        //createTextureSampler();
+        //createVertexBuffer();
+        buffer2 = vDevice->createDataBuffer((void*)vertices2.data(), sizeof(vertices2[0]) * vertices2.size());
+
+
+        const std::vector<uint16_t> indices = {
+    0, 1, 2, 2, 3, 0
+        };
+
+        iBuffer = vDevice->createDataBuffer((void*)indices.data(), sizeof(indices[0]) * indices.size());
+
+        //createIndexBuffer();
         createUniformBuffers();
         createDescriptorPool();
         createDescriptorSets();
@@ -1301,21 +1338,29 @@ private:
         scissor.extent = swapChainExtent;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        VkBuffer vertexBuffers[] = { vertexBuffer };
+        VkBuffer vertexBuffers[] = { buffer.buffer };
         VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffer, iBuffer.buffer, 0, VK_INDEX_TYPE_UINT16);
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
         vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
+        VkRect2D scissor2{};
+        VkExtent2D extend2 = { swapChainExtent.width*0.5,swapChainExtent.height*0.5 };
+        scissor2.offset = { 0, 0 };
+        scissor2.extent = extend2;
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissor2);
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline2);
 
+        VkBuffer vertexBuffers2[] = { buffer2.buffer };
+        VkDeviceSize offsets2[] = { 0 };
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers2, offsets2);
 
-        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffer, iBuffer.buffer, 0, VK_INDEX_TYPE_UINT16);
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout2, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
