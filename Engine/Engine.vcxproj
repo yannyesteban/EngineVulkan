@@ -136,15 +136,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="db.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Element.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysicalDevice.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VulkanEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="AppTypes.h" />
+    <ClInclude Include="db.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="Element.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="PhysicalDevice.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="SwapChain.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="VulkanEngine.h" />
     <ClInclude Include="VulkanTypes.h" />
   </ItemGroup>
   <ItemGroup>
