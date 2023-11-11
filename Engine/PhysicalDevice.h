@@ -71,7 +71,7 @@ public:
 			}
 		}
 
-		return availableFormats[0];
+		return availableFormats[1];
 	}
 
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {

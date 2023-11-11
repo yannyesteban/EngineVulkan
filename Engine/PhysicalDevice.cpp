@@ -211,13 +211,16 @@ std::vector<VkFramebuffer> PhysicalDeviceX::createFramebuffers(SwapChain swapCha
 	swapChainFramebuffers.resize(swapChain.imageViews.size());
 
 	for (size_t i = 0; i < swapChain.imageViews.size(); i++) {
-		
+		VkImageView attachments[] = {
+				swapChain.imageViews[i]
+		};
 
 		VkFramebufferCreateInfo framebufferInfo{};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = renderPass;
-		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-		framebufferInfo.pAttachments = attachments.data();
+		framebufferInfo.attachmentCount = 1;// static_cast<uint32_t>(attachments.size());
+		//framebufferInfo.pAttachments = attachments.data();
+		framebufferInfo.pAttachments = attachments;
 		framebufferInfo.width = swapChain.extent.width;
 		framebufferInfo.height = swapChain.extent.height;
 		framebufferInfo.layers = 1;

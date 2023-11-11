@@ -16,6 +16,8 @@
 #include "Item.h"
 #include "Actor.h"
 #include "Frame.h"
+#include "VulkanObject3D.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -66,13 +68,19 @@ public:
 	std::vector<Object3D> objects;
 
 	std::vector<VulkanTexture> vkTextures;
+
+	VkRenderPass renderPass;
+	VkSampler textureSampler;
+
+
 	//static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
 	
 	void start();
 	void draw();
 	void drawFrame(Frame frame);
-	~VulkanEngine();
-
+	//~VulkanEngine();
+	void cleanup();
+	void end();
 	
 private:
 	uint32_t currentFrame = 0;
@@ -92,6 +100,8 @@ private:
 	VkCommandPool commandPool;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline pipeline;
+
+	std::vector<VulkanObject3D> objects3D;
 	//****************************
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
@@ -125,5 +135,6 @@ private:
 	void updateUniformBuffer(Frame frame);
 	void recordCommandBuffer(Frame frame, VkCommandBuffer commandBuffer, uint32_t imageIndex);
 	
+	void cleanupSwapChain();
 };
 

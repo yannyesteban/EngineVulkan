@@ -149,6 +149,7 @@
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VulkanEngine.cpp" />
+    <ClCompile Include="VulkanObject3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="VulkanEngine.h" />
+    <ClInclude Include="VulkanObject3D.h" />
     <ClInclude Include="VulkanTypes.h" />
   </ItemGroup>
   <ItemGroup>

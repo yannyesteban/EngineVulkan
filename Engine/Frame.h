@@ -13,5 +13,7 @@ struct Frame
 	VkDeviceMemory uniformBuffersMemory;
 	void* uniformBuffersMapped;
 	const char* name;
+
+	uint32_t index;
 };
 

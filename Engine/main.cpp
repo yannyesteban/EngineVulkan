@@ -302,7 +302,7 @@ private:
 		//VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 		//createTextureSampler();
 		//createVertexBuffer();
-		buffer = vDevice->createDataBuffer((void*)vertices.data(), sizeof(vertices[0]) * vertices.size());
+		buffer = vDevice->createDataBuffer((void*)vertices.data(), sizeof(vertices[0]) * vertices.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 
 
 		const std::vector<Vertex> vertices2 = {
@@ -315,14 +315,14 @@ private:
 		//VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 		//createTextureSampler();
 		//createVertexBuffer();
-		buffer2 = vDevice->createDataBuffer((void*)vertices2.data(), sizeof(vertices2[0]) * vertices2.size());
+		buffer2 = vDevice->createDataBuffer((void*)vertices2.data(), sizeof(vertices2[0]) * vertices2.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 
 
 		const std::vector<uint16_t> indices = {
 			0, 1, 2, 2, 3, 0
 		};
 
-		iBuffer = vDevice->createDataBuffer((void*)indices.data(), sizeof(indices[0]) * indices.size());
+		iBuffer = vDevice->createDataBuffer((void*)indices.data(), sizeof(indices[0]) * indices.size(), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 
 		//createIndexBuffer();
 		createUniformBuffers();
@@ -1422,6 +1422,10 @@ private:
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = renderPass;
 		renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+		if (imageIndex == 2) {
+			printf("imageIndex %p ", imageIndex);
+		}
+
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChainExtent;
 
@@ -1523,6 +1527,8 @@ private:
 
 		uint32_t imageIndex;
 		VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+		printf("< %p >, [- %d -]\n", imageIndex, imageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			recreateSwapChain();
@@ -1844,29 +1850,44 @@ int main() {
 	
 
 	VulkanEngine engine;
-	std::vector<Texture> textures{ {"main","textures/fauna-marina.jpg","" }, { "room", "textures/viking_room.png","" }, { "fauna","textures/texture.jpg","" } };
+	std::vector<Texture> textures{ 
+		{"main","textures/fauna-marina.jpg","" }, 
+		{ "room", "textures/viking_room.png","" }, 
+		{ "fauna","textures/texture.jpg","" }, 
+		{ "bandera","textures/Bandera-Suiza.jpg","" }
+	};
 	std::vector<Shader> shaders{
 
 		{"vert", "shaders/vert.spv", "vert", "main", {1,1,3}},
 		{"frag", "shaders/frag.spv", "frag", "main", {1,1,3}}
 	};
 
+
+	float z = 0.6;
+	float y = 0.8;
 	std::vector<Item> items{
-		{"item1",
+		{ "item1",
 		{
-			{{-0.5f, -0.5f, 1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 1.0f}},
-			{{0.5f, -0.5f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-			{{0.5f, 0.5f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-			{{-0.5f, 0.5f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}}
+			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+			{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+			{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
 		}, 
+		{0, 1, 2, 2, 3, 0} , "bandera", {"vert", "frag"}},
+		{"item1", {
+			{{-0.5f, -0.5f, 0.0f+z}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+			{{0.5f, -0.5f, 0.0f+z}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f+z}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+			{{-0.5f, 0.5f, 0.0f+z}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+		},
 		{0, 1, 2, 2, 3, 0} , "room", {"vert", "frag"}},
 		{"item1", {
-			{{-0.5f, -0.5f, 1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 1.0f}},
-			{{0.5f, -0.5f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-			{{0.5f, 0.5f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-			{{-0.5f, 0.5f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}}
+			{{-0.5f, -0.5f, 0.0f + y}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+			{{0.5f, -0.5f, 0.0f + y}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f + y}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+			{{-0.5f, 0.5f, 0.0f + y}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
 		},
-		{0, 1, 2, 2, 3, 0} , "room", {"vert", "frag"}}
+		{0, 1, 2, 2, 3, 0} , "fauna", {"vert", "frag"}}
 	};
 
 	
@@ -1888,6 +1909,8 @@ int main() {
 		app.initWindow();
 		app.run();
 		app.doLoop();
+		engine.end();
+		engine.cleanup();
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

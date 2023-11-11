@@ -79,7 +79,7 @@ public:
 	void createCommandBuffers(std::vector<Frame> & frames, VkCommandPool commandPool);
 	void createSyncObjects(Frame& frames);
 	
-	void createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool descriptorPool, VkImageView textureImageView, VkSampler textureSampler, VkDeviceSize range);
+	std::vector<VkDescriptorSet> createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool descriptorPool, VkImageView textureImageView, VkSampler textureSampler, VkDeviceSize range);
 	VkPipeline createGraphicsPipeline(VkVertexInputBindingDescription bindingDescription, 
 		std::vector < VkVertexInputAttributeDescription> attributeDescriptions, VkDescriptorSetLayout& descriptorSetLayout);
 
@@ -207,7 +207,7 @@ public:
 		return buffer;
 	}
 
-	VertexBuffer createDataBuffer(void* points, VkDeviceSize bufferSize) {
+	VertexBuffer createDataBuffer(void* points, VkDeviceSize bufferSize, VkBufferUsageFlagBits f) {
 
 		VertexBuffer buffer;
 
@@ -233,7 +233,7 @@ public:
 		memcpy(data, points, (size_t)bufferSize);
 		vkUnmapMemory(device, stagingBufferMemory);
 
-		createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer.buffer, buffer.memory);
+		createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | f , VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer.buffer, buffer.memory);
 
 		copyBuffer(stagingBuffer, buffer.buffer, bufferSize);
 

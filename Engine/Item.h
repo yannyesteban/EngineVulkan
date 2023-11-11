@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 struct Data3D{
-	glm::vec3 posi;
+	glm::vec3 pos;
 	glm::vec3 color;
-	glm::vec3 texCoord;
+	glm::vec2 texCoord;
 };
 class Item
 {

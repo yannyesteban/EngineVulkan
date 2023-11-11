@@ -75,15 +75,15 @@ VkDescriptorPool Device::createDescriptorPool() {
 	uint32_t MAX_FRAMES_IN_FLIGHT = 2;
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[0].descriptorCount = 1000;// static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[1].descriptorCount = 1000;// static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolInfo.maxSets = 1000;// static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
 	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
@@ -121,7 +121,6 @@ void Device::createCommandBuffers(std::vector<Frame>& frames, VkCommandPool comm
 
 	for (size_t i = 0; i < frames.size(); i++) {
 		frames[i].commandBuffers = commandBuffers[i];
-
 	}
 }
 
@@ -148,8 +147,8 @@ void Device::createSyncObjects(Frame& frame) {
 
 VkPipeline Device::createGraphicsPipeline(VkVertexInputBindingDescription bindingDescription, 
 	std::vector<VkVertexInputAttributeDescription> attributeDescriptions, VkDescriptorSetLayout & descriptorSetLayout) {
-	auto vertShaderCode = readFile("shaders/vert.spv");
-	auto fragShaderCode = readFile("shaders/frag.spv");
+	auto vertShaderCode = readFile("shaders/vert2.spv");
+	auto fragShaderCode = readFile("shaders/frag2.spv");
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -292,8 +291,10 @@ void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryP
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-void Device::createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool descriptorPool, VkImageView textureImageView, VkSampler textureSampler, VkDeviceSize range) {
+std::vector<VkDescriptorSet> Device::createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool descriptorPool, VkImageView textureImageView, VkSampler textureSampler, VkDeviceSize range) {
 	
+	std::vector<VkDescriptorSet> descriptorSets;
+
 	auto framesCount = frames.size();
 	
 	std::vector<VkDescriptorSetLayout> layouts(framesCount, descriptorSetLayout);
@@ -309,7 +310,7 @@ void Device::createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool 
 	}
 
 	for (size_t i = 0; i < framesCount; i++) {
-		frames[i].descriptorSet = descriptorSets[i];
+		//frames[i].descriptorSet = descriptorSets[i];
 
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = frames[i].uniformBuffers;// uniformBuffers[i];
@@ -340,5 +341,9 @@ void Device::createDescriptorSets(std::vector<Frame> & frames, VkDescriptorPool 
 		descriptorWrites[1].pImageInfo = &imageInfo;
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+
+
 	}
+
+	return descriptorSets;
 }

@@ -39,14 +39,19 @@ void GameApp::doLoop()
 	engine->items = items;
 	engine->actors = actors;
 
+	int k = 0;
 	
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		doFrame();
-	}
 
-	//vkDeviceWaitIdle(device);
+		if (k++ >= 4) {
+			//break;
+		}
+	}
+	
+	
 
 }
 
