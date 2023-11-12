@@ -1864,7 +1864,7 @@ int main() {
 
 
 	float z = 0.6;
-	float y = 0.8;
+	float y = 0.3;
 	std::vector<Item> items{
 		{ "item1",
 		{

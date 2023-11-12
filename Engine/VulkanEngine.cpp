@@ -13,6 +13,11 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 }
 
 void VulkanEngine::cleanupSwapChain() {
+	
+	vkDestroyImageView(device->device, depthResources.imageView, nullptr);
+	vkDestroyImage(device->device, depthResources.image, nullptr);
+	vkFreeMemory(device->device, depthResources.imageMemory, nullptr);
+	
 	for (auto framebuffer : swapChain.framebuffers) {
 		vkDestroyFramebuffer(device->device, framebuffer, nullptr);
 	}
@@ -115,8 +120,9 @@ void VulkanEngine::start()
 	renderPass = device->createRenderPass(swapChain.imageFormat);
 	
 	
+	depthResources = device->createDepthResources(extent);
 
-	swapChain.framebuffers = physicalDevices.at(position).createFramebuffers(swapChain, renderPass, swapChain.imageViews);
+	swapChain.framebuffers = physicalDevices.at(position).createFramebuffers(swapChain, renderPass, { depthResources.imageView });
 	
 
 	device->renderPass = renderPass;
@@ -498,9 +504,17 @@ void VulkanEngine::recordCommandBuffer(Frame frame, VkCommandBuffer commandBuffe
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChain.extent;
 
-	VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
+	/*VkClearValue clearColor = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
 	renderPassInfo.clearValueCount = 1;
 	renderPassInfo.pClearValues = &clearColor;
+	*/
+
+	std::array<VkClearValue, 2> clearValues{};
+	clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	renderPassInfo.pClearValues = clearValues.data();
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -553,8 +567,7 @@ void VulkanEngine::drawFrame(Frame frame) {
 
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(device->device, swapChain.swapchain, UINT64_MAX, frame.imageAvailableSemaphores, VK_NULL_HANDLE, &imageIndex);
-	db(" imageIndex ");
-	printf("< %p >, [- %d -]\n", imageIndex, imageIndex);
+	
 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 		recreateSwapChain();
 		return;

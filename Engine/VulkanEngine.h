@@ -17,7 +17,8 @@
 #include "Actor.h"
 #include "Frame.h"
 #include "VulkanObject3D.h"
-
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -100,6 +101,8 @@ private:
 	VkCommandPool commandPool;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline pipeline;
+
+	VulkanDepthResources depthResources;
 
 	std::vector<VulkanObject3D> objects3D;
 	//****************************
