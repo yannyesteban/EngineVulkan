@@ -1,14 +1,21 @@
+#pragma once
+
+
+
+
 //#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#pragma once
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <glm/gtx/hash.hpp>
 
 
 #include <iostream>
@@ -27,6 +34,8 @@
 #include "AppTypes.h"
 #include "Frame.h"
 #include "db.h"
+
+
 
 struct VulkanDepthResources {
 	const char* id;

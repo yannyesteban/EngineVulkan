@@ -1,12 +1,26 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/hash.hpp>
+
+
 #include <stdexcept>
 #include <cstddef>
 #include <iostream>
 #include <vector>
 #include <set>
 #include <chrono>
+#include <map>
+#include <algorithm>
+#include <unordered_map>
+
+
 
 #include "db.h"
 #include "PhysicalDevice.h"
@@ -17,10 +31,11 @@
 #include "Actor.h"
 #include "Frame.h"
 #include "VulkanObject3D.h"
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
+
+
+#define TINYOBJLOADER_IMPLEMENTATION
+//#include "tiny_obj_loader.h"
 
 #ifdef NDEBUG
 const bool CenableValidationLayers = false;
@@ -52,7 +67,17 @@ struct Object3D {
 	VertexBuffer vertex;
 	VertexBuffer indices;
 	Item item;
+
 };
+
+namespace std
+{
+	template<> struct hash<Data3D> {
+		size_t operator()(Data3D const& vertex) const {
+			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+		}
+	};
+}
 
 class VulkanEngine
 {
@@ -82,6 +107,8 @@ public:
 	//~VulkanEngine();
 	void cleanup();
 	void end();
+
+	void loadModel(const char* path, std::vector<Data3D> vertices, std::vector<uint32_t> indices);
 	
 private:
 	uint32_t currentFrame = 0;

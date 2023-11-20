@@ -7,3 +7,9 @@ public:
 	const char* format;
 };
 
+
+struct ModelObj {
+	const char* id;
+	const char* source;
+
+};
