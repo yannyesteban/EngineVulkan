@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="db.cpp" />
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysicalDevice.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VulkanEngine.cpp" />
+    <ClCompile Include="VulkanObject3D.cpp" />
+    <ClCompile Include="home.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppTypes.h" />
+    <ClInclude Include="db.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="PhysicalDevice.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="SwapChain.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="VulkanEngine.h" />
+    <ClInclude Include="VulkanObject3D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cubo.frag" />
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
+    <None Include="solid.vert" />
+    <None Include="solid.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{b26cfd35-b92a-41a7-a4ed-acceefb23124}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

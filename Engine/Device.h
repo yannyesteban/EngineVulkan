@@ -912,9 +912,10 @@ public:
 		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 
 	}
+	std::vector<char> readFile ( const std::string& filename );
+	VkShaderModule createShaderModule ( const std::vector<char>& code );
+	bool hasStencilComponent ( VkFormat format );
 private:
-	std::vector<char> readFile(const std::string& filename);
-	VkShaderModule createShaderModule(const std::vector<char>& code);
-	bool hasStencilComponent(VkFormat format);
+
 };
 

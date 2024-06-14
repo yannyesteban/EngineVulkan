@@ -93,103 +93,107 @@ void VulkanEngine::cleanup()
 
 	glfwTerminate();
 }
-void VulkanEngine::start()
-{
-	db("start");
-	createInstance();
-	setupDebugMessenger();
-	createSurface();
-	physicalDevices = getPhysicalDevices();
-	
+void VulkanEngine::start () {
+	db ( "start" );
+	createInstance ();
+	setupDebugMessenger ();
+	createSurface ();
+	physicalDevices = getPhysicalDevices ();
+
 	int position = 0;
-	
-	device = physicalDevices.at(position).createDevice();
-	commandPool = physicalDevices.at(position).createCommandPool();
 
-	graphicsQueue = physicalDevices.at(position).graphicsQueue;
-	presentQueue = physicalDevices.at(position).presentQueue;
-	
+	device = physicalDevices.at ( position ).createDevice ();
+	commandPool = physicalDevices.at ( position ).createCommandPool ();
+
+	graphicsQueue = physicalDevices.at ( position ).graphicsQueue;
+	presentQueue = physicalDevices.at ( position ).presentQueue;
+
 	device->commandPool = commandPool;
-	
 
-	swapChain = physicalDevices.at(position).createSwapChain(window);
+
+	swapChain = physicalDevices.at ( position ).createSwapChain ( window );
 	extent = swapChain.extent;
-	renderPass = device->createRenderPass(swapChain.imageFormat);
-	
-	
-	depthResources = device->createDepthResources(extent);
+	renderPass = device->createRenderPass ( swapChain.imageFormat );
 
-	swapChain.framebuffers = physicalDevices.at(position).createFramebuffers(swapChain, renderPass, { depthResources.imageView });
-	
+
+	depthResources = device->createDepthResources ( extent );
+
+	swapChain.framebuffers = physicalDevices.at ( position ).createFramebuffers ( swapChain, renderPass, { depthResources.imageView } );
+
 
 	device->renderPass = renderPass;
 	//pipelineLayout = device->pipelineLayout;
-	
-	descriptorSetLayout = device->createDescriptorSetLayout();
-	descriptorPool = device->createDescriptorPool();
+
+	descriptorSetLayout = device->createDescriptorSetLayout ();
+	descriptorPool = device->createDescriptorPool ();
 	device->descriptorSetLayout = descriptorSetLayout;
-	
+
 	std::map<std::string, VulkanTexture> mTextures;
 
 
 	for (auto& t : textures) {
 
-		VulkanTexture vt = device->createTexture(t.source);
+		VulkanTexture vt = device->createTexture ( t.source );
 		vt.id = "yanny";
-		vkTextures.push_back(vt);
+		vkTextures.push_back ( vt );
 		mTextures[t.id] = vt;
 	}
 
-	
 
 
-	frames.resize(2);
-	
+
+	frames.resize ( 2 );
+
 	uint32_t currentFrame = 0;
 	for (auto& frame : frames) {
-		db("creando un frame");
+		db ( "creando un frame" );
 		frame.index = currentFrame;
-		device->createUniformBuffers(frame, sizeof(UniformBufferObject2));
-		device->createSyncObjects(frame);
+		device->createUniformBuffers ( frame, sizeof ( UniformBufferObject2 ) );
+		device->createSyncObjects ( frame );
 		currentFrame++;
 	}
 
-	
-	device->createCommandBuffers(frames, device->commandPool);
-	
-	
 
-	
+	device->createCommandBuffers ( frames, device->commandPool );
+
+
+
+
 
 	//device->createTexture("textures/viking_room.png");
 	//textureSampler = device->createTextureSampler();
-	
-	
-	VkVertexInputBindingDescription bindingDescription{};
+
+
+	VkVertexInputBindingDescription bindingDescription {};
 	bindingDescription.binding = 0;
-	bindingDescription.stride = sizeof(Data3D);
+	bindingDescription.stride = sizeof ( Data3D );
 	bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 	std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-	attributeDescriptions.resize(3);
+	attributeDescriptions.resize ( 3 );
 
 	attributeDescriptions[0].binding = 0;
 	attributeDescriptions[0].location = 0;
 	attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attributeDescriptions[0].offset = offsetof(Data3D, pos);
+	attributeDescriptions[0].offset = offsetof ( Data3D, pos );
 
 	attributeDescriptions[1].binding = 0;
 	attributeDescriptions[1].location = 1;
 	attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attributeDescriptions[1].offset = offsetof(Data3D, color);
+	attributeDescriptions[1].offset = offsetof ( Data3D, color );
 
 	attributeDescriptions[2].binding = 0;
 	attributeDescriptions[2].location = 2;
 	attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-	attributeDescriptions[2].offset = offsetof(Data3D, texCoord);
+	attributeDescriptions[2].offset = offsetof ( Data3D, texCoord );
 
-	
-	
+	SEVIAN::Entity3D cubeEntity = SEVIAN::createCubeEntity ();
+	SEVIAN::Entity3D square = SEVIAN::createSquareEntity ();
+	/*VKENGINE::Entity entity { };*/
+	auto pipelineLayout = device->pipelineLayout;
+	entity.init ( device, descriptorPool, cubeEntity, frames );
+	entity2.init ( device, descriptorPool, square, frames );
+
 
 	for (auto& i : items) {
 		VulkanObject3D obj;
@@ -313,8 +317,6 @@ VkResult VulkanEngine::CreateDebugUtilsMessengerEXT(VkInstance instance, const V
 	}
 }
 
-
-
 void VulkanEngine::setupDebugMessenger() {
 	if (!enableValidationLayers) return;
 
@@ -325,12 +327,14 @@ void VulkanEngine::setupDebugMessenger() {
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
 }
+
 void VulkanEngine::createSurface() {
 	db("xxxxxxxxxxxxxx");
 	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create window surface!");
 	}
 }
+
 QueueFamilyIndices1 VulkanEngine::findQueueFamilies(VkPhysicalDevice physicalDevice) {
 	QueueFamilyIndices1 indices;
 
@@ -363,8 +367,6 @@ QueueFamilyIndices1 VulkanEngine::findQueueFamilies(VkPhysicalDevice physicalDev
 	return indices;
 }
 
-
-
 bool VulkanEngine::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice) {
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
@@ -380,6 +382,7 @@ bool VulkanEngine::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice) 
 
 	return requiredExtensions.empty();
 }
+
 SwapChainSupportDetails1 VulkanEngine::querySwapChainSupport(VkPhysicalDevice physicalDevice) {
 	SwapChainSupportDetails1 details;
 
@@ -441,7 +444,7 @@ std::vector <PhysicalDeviceX> VulkanEngine::getPhysicalDevices() {
 		vkGetPhysicalDeviceProperties(device, &deviceProperties);
 		std::cout << "deviceProperties:  " << deviceProperties.deviceName << std::endl;
 		if (isDeviceSuitable(device)) {
-
+			std::cout << " isDeviceSuitable -> deviceProperties:  " << deviceProperties.deviceName << std::endl;
 			PhysicalDeviceX ph = PhysicalDeviceX(instance, surface, device);
 			physicalDevices.push_back(ph);
 			//physicalDevice = device;
@@ -463,7 +466,26 @@ void VulkanEngine::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUti
 	}
 }
 
-void VulkanEngine::recreateSwapChain() {}
+void VulkanEngine::recreateSwapChain() {
+
+	int width = 0, height = 0;
+	glfwGetFramebufferSize ( window, &width, &height );
+	while (width == 0 || height == 0) {
+		glfwGetFramebufferSize ( window, &width, &height );
+		glfwWaitEvents ();
+	}
+
+	vkDeviceWaitIdle ( device->device );
+
+	cleanupSwapChain ();
+
+
+	int position = 0;
+
+	swapChain = physicalDevices.at ( position ).createSwapChain ( window );
+	depthResources = device->createDepthResources ( swapChain.extent );
+	swapChain.framebuffers = physicalDevices.at ( position ).createFramebuffers ( swapChain, renderPass, { depthResources.imageView } );
+}
 
 void VulkanEngine::draw() {
 
@@ -529,10 +551,15 @@ void VulkanEngine::recordCommandBuffer(Frame frame, VkCommandBuffer commandBuffe
 	scissor.offset = { 0, 0 };
 	scissor.extent = swapChain.extent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
+	
 	for (auto& object : objects3D) {
 		object.draw(commandBuffer, frame);
 	}
+	
+	
+	entity.draw ( commandBuffer, frame );
+	entity2.draw ( commandBuffer, frame );
+	
 	/*
 
 	VkBuffer vertexBuffers[] = { objects[0].vertex.buffer };
@@ -558,7 +585,7 @@ void VulkanEngine::recordCommandBuffer(Frame frame, VkCommandBuffer commandBuffe
 void VulkanEngine::drawFrame(Frame frame) {
 	//VkDevice device;
 	//VkSwapchainKHR swapChain;
-	bool framebufferResized = false;
+	
 
 	vkWaitForFences(device->device, 1, &frame.inFlightFences, VK_TRUE, UINT64_MAX);
 
@@ -617,6 +644,8 @@ void VulkanEngine::drawFrame(Frame frame) {
 	result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+
+		std::cout << "error error \n";
 		framebufferResized = false;
 		recreateSwapChain();
 	}

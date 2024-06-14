@@ -7,7 +7,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/hash.hpp>
+
 
 
 #include <stdexcept>
@@ -28,11 +28,9 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Item.h"
-#include "Actor.h"
+#include "Entity.h"
 #include "Frame.h"
 #include "VulkanObject3D.h"
-
-
 
 #define TINYOBJLOADER_IMPLEMENTATION
 //#include "tiny_obj_loader.h"
@@ -70,14 +68,7 @@ struct Object3D {
 
 };
 
-namespace std
-{
-	template<> struct hash<Data3D> {
-		size_t operator()(Data3D const& vertex) const {
-			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
-		}
-	};
-}
+
 
 class VulkanEngine
 {
@@ -87,7 +78,7 @@ public:
 	std::vector<Texture> textures;
 	std::vector<Shader> shaders;
 	std::vector<Item> items;
-	std::vector<Actor> actors;
+	
 	std::vector<Frame> frames;
 	VkExtent2D extent;
 
@@ -109,7 +100,7 @@ public:
 	void end();
 
 	void loadModel(const char* path, std::vector<Data3D> vertices, std::vector<uint32_t> indices);
-	
+	bool framebufferResized = false;
 private:
 	uint32_t currentFrame = 0;
 	const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -132,6 +123,9 @@ private:
 	VulkanDepthResources depthResources;
 
 	std::vector<VulkanObject3D> objects3D;
+
+	VKENGINE::Entity entity {};
+	VKENGINE::Entity entity2 {};
 	//****************************
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
@@ -143,7 +137,7 @@ private:
 	const bool enableValidationLayers = CenableValidationLayers;
 	//****************************
 	
-
+	
 	bool checkValidationLayerSupport();
 	std::vector<const char*> getRequiredExtensions();
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);

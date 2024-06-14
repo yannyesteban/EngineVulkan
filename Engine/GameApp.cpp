@@ -37,7 +37,7 @@ void GameApp::doLoop()
 	engine->textures = textures;
 	engine->shaders = shaders;
 	engine->items = items;
-	engine->actors = actors;
+	
 
 	int k = 0;
 	

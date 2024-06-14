@@ -64,6 +64,18 @@ VkImageView PhysicalDeviceX::createImageView(VkImage image, VkFormat format) {
 }
 
 void PhysicalDeviceX::createLogicalDevice() {
+
+	// Enumerar las extensiones disponibles en el dispositivo físico
+	uint32_t extensionCount = 0;
+	vkEnumerateDeviceExtensionProperties ( physicalDevice, nullptr, &extensionCount, nullptr );
+	std::vector<VkExtensionProperties> availableExtensions ( extensionCount );
+	vkEnumerateDeviceExtensionProperties ( physicalDevice, nullptr, &extensionCount, availableExtensions.data () );
+
+	// Imprimir las extensiones disponibles
+	for (const auto& extension : availableExtensions) {
+		std::cout << "Extension: " << extension.extensionName << std::endl;
+	}
+
 	//QueueFamilyIndices indices = 
 	findQueueFamilies();
 	
@@ -248,7 +260,7 @@ VkCommandPool PhysicalDeviceX::createCommandPool() {
 
 
 	//QueueFamilyIndices queueFamilyIndices =
-		findQueueFamilies();
+	//	findQueueFamilies();
 
 	VkCommandPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;

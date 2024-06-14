@@ -5,14 +5,14 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Item.h"
-#include "Actor.h"
+
 #include "VulkanEngine.h"
 class GameApp
 {
 private: 
 	GLFWwindow* window;
-	uint32_t width = 800;
-	uint32_t height = 600;
+	uint32_t width = 800 * 2;
+	uint32_t height = 600 * 2;
 
 	
 	
@@ -24,7 +24,7 @@ public:
 	std::vector<Texture> textures;
 	std::vector<Shader> shaders;
 	std::vector<Item> items;
-	std::vector<Actor> actors;
+	
 
 	void (*resizeCallback)(GLFWwindow* window, int width, int height);
 	void initWindow();

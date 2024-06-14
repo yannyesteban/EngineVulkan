@@ -147,8 +147,12 @@ void Device::createSyncObjects(Frame& frame) {
 
 VkPipeline Device::createGraphicsPipeline(VkVertexInputBindingDescription bindingDescription, 
 	std::vector<VkVertexInputAttributeDescription> attributeDescriptions, VkDescriptorSetLayout & descriptorSetLayout) {
-	auto vertShaderCode = readFile("shaders/vert2.spv");
-	auto fragShaderCode = readFile("shaders/frag2.spv");
+	//auto vertShaderCode = readFile("shaders/vert2.spv");
+	//auto fragShaderCode = readFile("shaders/frag2.spv");
+
+	auto vertShaderCode = readFile ( "shaders/solid_vert.spv" );
+	auto fragShaderCode = readFile ( "shaders/solid_frag.spv" );
+
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -307,13 +311,15 @@ std::vector<VkDescriptorSet> Device::createDescriptorSets(std::vector<Frame> & f
 	auto framesCount = frames.size();
 	
 	std::vector<VkDescriptorSetLayout> layouts(framesCount, descriptorSetLayout);
+
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = descriptorPool;
-	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(framesCount);
+	//static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 	allocInfo.pSetLayouts = layouts.data();
 
-	descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+	descriptorSets.resize( framesCount );
 	if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
