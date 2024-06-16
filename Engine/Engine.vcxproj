@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="db.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="EngineApplication.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="GameApp.cpp" />
@@ -145,21 +146,25 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicalDevice.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VulkanEngine.cpp" />
     <ClCompile Include="VulkanObject3D.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppTypes.h" />
     <ClInclude Include="db.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="EngineApplication.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="PhysicalDevice.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="SwapChain.h" />
@@ -167,10 +172,12 @@
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="VulkanEngine.h" />
     <ClInclude Include="VulkanObject3D.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cube.vert" />
     <None Include="cubo.frag" />
+    <None Include="example.json" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
     <None Include="solid.frag" />

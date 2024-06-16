@@ -15,6 +15,9 @@
     <ClCompile Include="VulkanEngine.cpp" />
     <ClCompile Include="VulkanObject3D.cpp" />
     <ClCompile Include="home.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="EngineApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppTypes.h" />
@@ -32,6 +35,9 @@
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="VulkanEngine.h" />
     <ClInclude Include="VulkanObject3D.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="EngineApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cubo.frag" />
@@ -39,6 +45,8 @@
     <None Include="shader.vert" />
     <None Include="solid.vert" />
     <None Include="solid.frag" />
+    <None Include="cube.vert" />
+    <None Include="example.json" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="NewFilter1">

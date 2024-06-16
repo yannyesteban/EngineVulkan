@@ -1,6 +1,6 @@
 #include "GameApp.h"
 #include "Entity.h"
-
+#include <fstream>
 
 static void x2000 ( GLFWwindow* window, int width, int height ) {
 	auto app = reinterpret_cast<GameApp*>(glfwGetWindowUserPointer ( window ));

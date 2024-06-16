@@ -15,13 +15,13 @@ void VKENGINE::Entity::init ( Device* pDevice, VkDescriptorPool descriptorPool, 
         printf ( "%d", x );
 
 		auto texture = device->createTexture ( "textures/fauna-marina.jpg" );
-
+        texture.id = "yanny";
 		auto descriptorSets = device->createDescriptorSets ( frames, descriptorPool, texture.imageView, texture.sampler, sizeof ( UniformBufferObject ) );
 		auto attributeDescriptions = Entity::getAttributeDescriptions ();
 		auto pipeline = createGraphicsPipeline ( Entity::getBindingDescription (), attributeDescriptions, device->descriptorSetLayout );
 		//auto pipelineLayout = device->pipelineLayout;
 
-		object.vertex = device->createDataBuffer ( (void*) mesh.indices.data (), sizeof ( mesh.indices[0] ) * mesh.vertices.size (), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT );
+		object.vertex = device->createDataBuffer ( (void*) mesh.vertices.data (), sizeof ( mesh.vertices[0] ) * mesh.vertices.size (), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT );
 		object.indices = device->createDataBuffer ( (void*) mesh.indices.data (), sizeof ( mesh.indices[0] ) * mesh.indices.size (), VK_BUFFER_USAGE_INDEX_BUFFER_BIT );
 		object.indicesSizes = mesh.indices.size ();
 		object.pipeline = pipeline;
@@ -97,8 +97,13 @@ VkPipeline VKENGINE::Entity::createGraphicsPipeline (
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    //rasterizer.cullMode = VK_CULL_MODE_NONE;
+
+    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;//VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
+
+    
+
 
     VkPipelineMultisampleStateCreateInfo multisampling {};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;

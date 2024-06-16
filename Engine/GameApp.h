@@ -32,5 +32,8 @@ public:
 	void doLoop();
 	void doFrame();
 	void test(uint32_t width, uint32_t height);
+
+	void onKeyPress ( int key );
+	void onMouseClick ( int button );
 };
 

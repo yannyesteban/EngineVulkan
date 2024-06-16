@@ -553,12 +553,12 @@ void VulkanEngine::recordCommandBuffer(Frame frame, VkCommandBuffer commandBuffe
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	
 	for (auto& object : objects3D) {
-		object.draw(commandBuffer, frame);
+		//object.draw(commandBuffer, frame);
 	}
 	
 	
 	entity.draw ( commandBuffer, frame );
-	entity2.draw ( commandBuffer, frame );
+	//entity2.draw ( commandBuffer, frame );
 	
 	/*
 
@@ -600,9 +600,11 @@ void VulkanEngine::drawFrame(Frame frame) {
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
 
-	updateUniformBuffer(frame);
+	
 
 	vkResetFences(device->device, 1, &frame.inFlightFences);
+
+	updateUniformBuffer ( frame );
 
 	vkResetCommandBuffer(frame.commandBuffers, /*VkCommandBufferResetFlagBits*/ 0);
 	recordCommandBuffer(frame, frame.commandBuffers, imageIndex);
